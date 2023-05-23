@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { calculateRange, sliceData } from '../../../utils/table-pagination';
 import DashboardHeader from '../../../components/adminPanel/index';
 import './styles.css';
-import axios from 'axios';
+import axiosApiInstance from '../../../utils/axios-middleware';
+import Button from 'react-bootstrap/Button'
 
 
 import adminIcon from '../../../assets/images/admin.png';
@@ -14,9 +15,11 @@ function Admins() {
     const [admins, setAdmins] = useState([]);
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState([]);
+    let effectLock = false;
 
     useEffect(() => {
-        axios.get('http://localhost:8080/v1/admin/admins')
+        if (effectLock) return;
+        axiosApiInstance.get(process.env.REACT_APP_API_URL + '/v1/admin/admins')
             .then((response) => {
                 console.log(response.data.message);
                 setAdmins(response.data.message);
@@ -26,6 +29,7 @@ function Admins() {
             });
         setPagination(calculateRange(admins, 5));
         setAdmins(sliceData(admins, page, 5));
+        effectLock = true;
     }, []);
 
     // Search
@@ -51,8 +55,7 @@ function Admins() {
 
     return(
         <div className='dashboard-content'>
-            <DashboardHeader
-                btnText="New Admin" />
+            <Link to='/admin/admins/new'><Button>New Admin</Button></Link>
 
             <div className='dashboard-content-container'>
                 <div className='dashboard-content-header'>

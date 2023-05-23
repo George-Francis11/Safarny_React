@@ -63,9 +63,6 @@ export default function Header({ type }) {
               
               {type !== "list" &&
                   <>
-                    <h1 className='headerTitle'>A lifetime full of discounts?</h1>
-                      <p className='headerDesc'>Yes, it's possible. Join us and get the best deals.</p>
-                      <button className='headerBtn'>Sign in/Register</button>
                       <div className="headerSearch">
                           <div className="headerSearchItem">
                               <FontAwesomeIcon icon={faBed} className='headerIcon' />

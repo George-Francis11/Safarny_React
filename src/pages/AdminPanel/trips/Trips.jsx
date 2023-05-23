@@ -4,13 +4,12 @@ import DashboardHeader from '../../../components/adminPanel/index';
 
 
 import { calculateRange, sliceData } from '../../../utils/table-pagination';
-import axios from 'axios';
+import axiosApiInstance from '../../../utils/axios-middleware';
 
 import './styles.css';
 import DoneIcon from '../../../assets/icons/done.svg';
 import CancelIcon from '../../../assets/icons/cancel.svg';
 import RefundedIcon from '../../../assets/icons/refunded.svg';
-import { set } from 'date-fns';
 
 function Trips({trip}) {
     const [search, setSearch] = useState('');
@@ -18,15 +17,18 @@ function Trips({trip}) {
     const [tripsShown, setTripsShown] = useState([]); // trips to be shown on the current page
     const [page, setPage] = useState(1);
     const [pagination, setPagination] = useState([]);
+    let effectLock = false;
 
     const fetchTrips = async trip => {
-        const req = await axios.get('http://localhost:8080/v1/admin/trips')
+        const req = await axiosApiInstance.get('http://localhost:8080/v1/admin/trips')
         setTrips(req.data.trips);
         setPagination(calculateRange(req.data.trips, 5));
         setTripsShown(sliceData(req.data.trips, page, 5));
     };
-        useEffect(() => {
-            fetchTrips(trip);
+    useEffect(() => {
+        if (effectLock) return;
+        fetchTrips(trip);
+        effectLock = true;
     }, [trip]);
 
     // Search
@@ -55,8 +57,8 @@ function Trips({trip}) {
 
     return(
         <div className='dashboard-content'>
-            <DashboardHeader
-                btnText="New Trip" />
+            
+            <Link to={`/admin/trips/new`}>New Trip</Link>
 
             <div className='dashboard-content-container'>
                 <div className='dashboard-content-header'>
@@ -138,7 +140,7 @@ function Trips({trip}) {
                     </div>
                 : 
                     <div className='dashboard-content-footer'>
-                        <span className='empty-table'>No data</span>
+                        <span className='empty-table'>Loading</span>
                     </div>
                 }
             </div>

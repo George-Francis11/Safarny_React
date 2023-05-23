@@ -6,11 +6,7 @@ export default function Navbar() {
   return (
     <div className='navbar'>
       <div className='navContainer'>
-        <span className='logo'>lamabooking</span>
-        <div className='navItems'>
-          <button className='navButton'>Register</button>
-          <button className='navButton'>Login</button>
-        </div>
+        <span className='logo'>Safarny.com</span>
       </div>
     </div>
   )
